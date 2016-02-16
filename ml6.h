@@ -38,11 +38,3 @@ typedef struct point_t color;
 typedef struct point_t screen[XRES][YRES];
 #endif
 
-Status
-API
-Training
-Shop
-Blog
-About
-Pricing
-

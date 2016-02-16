@@ -5,52 +5,141 @@
 #include "draw.h"
 //Insert your line algorithm here
 void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
-  //calculate slope
-  int m = (y1-y0)/(x1-x);
+  int octant = 0;
+  int dx = x1-x0;
+  int dy = y1-y0;
+
+  //If the line is drawn right to left, switch the two endpoints
+  if(dx<0){
+    printf("\nendpoints switched\n");
+    int tempX = x1;
+    int tempY = y1;
+    x1 = x0;
+    y1 = y0;
+    x0 = tempX;
+    y0 = tempY;
+    dx = x1-x0;
+    dy = y1-y0;
+  }
+
 
   //Determine which octant the line is in
-  ////Determine if the line is drawn left to right
-  //////If yes, continue as is
-  //////If not, switch endpoints
-  ////Determine the octant out of I,II,VII, and VIII
-  //////Octant 1
-  if(0<m && m<1){
-
+  if(dy>0){
+    if(dy<dx){
+      octant = 1;
+    }else{
+      octant = 2;
+    }
+  }else{
+    if(abs(dy)<abs(dx)){
+      octant = 8;
+    }else{
+      octant = 7;
+    }
   }
-  //////Octant 2
-  else if(m>=1){
 
+  if(octant == 1){
+    //////////////////////Octant I////////////////////////////////
+    int x, y, A, B,d;
+
+    //initial values
+    x = x0;
+    y = y0;
+    A = y1-y0;
+    B = -(x1-x0);
+    d = (2*A) + B;
+
+    //get rid of floating point division
+    A = 2*A;
+    B = 2*B;
+
+    while(x<=x1){
+      plot(s,c,x,y);
+      if(d>0){
+	y+=1;
+	d += B;
+      }
+      x += 1;
+      d += A;
+    }
+    //////////////////////////////////////////////////////////////
   }
-  //////Octant VII
-  else if(m>-1){
+  else if(octant == 2){
+    //////////////////////Octant II///////////////////////////////
+    int x, y, A, B,d;
 
-  }
-  //////Octant VIII
-  else{
+    //initial values
+    x = x0;
+    y = y0;
+    A = y1-y0;
+    B = -(x1-x0);
+    d = A + (2*B);
 
-  }
-  //////////////////////Octant I/////////////////////////////
-  int x, y, A, B,d;
+    //get rid of floating points
+    A = 2*A;
+    B = 2*B;
 
-  //initial values
-  x = x0;
-  y = y0;
-  A = y1-y0;
-  B = -(x1-x0);
-  d = 2A + B;
-
-  //get rid of floating point division
-  A = 2A;
-  B = 2B;
-
-  while(x<=x1){
-    plot(s,c,x,y);
-    if(d>0){
-      y+=1;
+    while(y <= y1){
+      plot(s,c,x,y);
+      if(d<0){
+	x += 1;
+        d += A;
+      }
+      y += 1;
       d += B;
     }
-    x += 1;
-    d += A;
+    ////////////////////////////////////////////////////////////////
   }
-  //////////////////////////////////////////////////////////////
+  else if(octant == 7){
+    //////////////////////Octant VII//////////////////////////////
+    int x, y, A, B,d;
+
+    //initial values
+    x = x0;
+    y = y0;
+    A = y1-y0;
+    B = -(x1-x0);
+    d = -A + (2*B);
+
+    //get rid of floating points
+    A = 2*A;
+    B = 2*B;
+
+    while(y >= y1){
+      plot(s,c,x,y);
+      if(d<0){
+	x += 1;
+        d -= A;
+      }
+      y -= 1;
+      d += B;
+    }
+    ////////////////////////////////////////////////////////////////
+  }
+  else if(octant == 8){
+    //////////////////////Octant VIII/////////////////////////////
+    int x, y, A, B,d;
+
+    //initial values
+    x = x0;
+    y = y0;
+    A = y1-y0;
+    B = -(x1-x0);
+    d = (2*A) - B;
+
+    //get rid of floating point division
+    A = 2*A;
+    B = 2*B;
+
+    while(x<=x1){
+      plot(s,c,x,y);
+      if(d<0){
+	y -= 1;
+	d -= B;
+      }
+      x += 1;
+      d += A;
+    }
+    //////////////////////////////////////////////////////////////
+  }
 }
