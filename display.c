@@ -111,3 +111,5 @@ void display( screen s) {
   }
   pclose(f);
 }
+
+//DISPLAY=:0 Display someimage.jpeg
